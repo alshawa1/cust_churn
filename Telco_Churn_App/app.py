@@ -8,8 +8,9 @@ st.write("📂 Current directory:", os.getcwd())
 st.write("📄 Files here:", os.listdir())
 
 # Load model & features
-model = joblib.load("churn_model.pkl")
-features = joblib.load("features.pkl")
+model = joblib.load("Telco_Churn_App/churn_model.pkl")
+features = joblib.load("Telco_Churn_App/features.pkl")
+
 
 st.set_page_config(page_title="Customer Churn Prediction", layout="centered")
 st.title("📊 Customer Churn Prediction")
@@ -54,4 +55,5 @@ if st.button("Predict Churn"):
         st.error(f"⚠️ Customer is likely to CHURN\nProbability: {probability:.2%}")
     else:
         st.success(f"✅ Customer is likely to STAY\nProbability: {probability:.2%}")
+
 
