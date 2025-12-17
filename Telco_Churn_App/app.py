@@ -4,8 +4,18 @@ import joblib
 import os
 import streamlit as st
 
-st.write("📂 Current directory:", os.getcwd())
-st.write("📄 Files here:", os.listdir())
+import joblib, os, streamlit as st
+
+st.write("CWD:", os.getcwd())
+st.write("FILES:", os.listdir())
+
+model_path = os.path.abspath("churn_model.pkl")
+st.write("MODEL PATH:", model_path)
+
+model = joblib.load(model_path)
+
+st.write("MODEL TYPE:", type(model))
+
 
 # Load model & features
 model = joblib.load("Telco_Churn_App/churn_model.pkl")
@@ -62,4 +72,5 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model = joblib.load(os.path.join(BASE_DIR, "churn_model.pkl"))
 features = joblib.load(os.path.join(BASE_DIR, "features.pkl"))
 st.write("Model coefficients:", model.coef_)
+
 
