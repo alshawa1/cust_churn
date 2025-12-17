@@ -8,6 +8,11 @@ st.set_page_config(
     layout="centered"
 )
 
+# ================== Paths ==================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(BASE_DIR, "churn_model.pkl")
+FEATURES_PATH = os.path.join(BASE_DIR, "features.pkl")
 
 # ================== Debug (احذفه بعد التأكد) ==================
 st.write("📂 Current Directory:", os.getcwd())
@@ -92,5 +97,6 @@ if st.button("Predict Churn"):
             f"✅ Customer is likely to STAY\n\n"
             f"Probability: {probability:.2%}"
         )
+
 
 
