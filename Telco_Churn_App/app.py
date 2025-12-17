@@ -57,3 +57,9 @@ if st.button("Predict Churn"):
         st.success(f"✅ Customer is likely to STAY\nProbability: {probability:.2%}")
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(os.path.join(BASE_DIR, "churn_model.pkl"))
+features = joblib.load(os.path.join(BASE_DIR, "features.pkl"))
+st.write("Model coefficients:", model.coef_)
+
