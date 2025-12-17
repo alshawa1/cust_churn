@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
+import streamlit as st
+
+st.write("📂 Current directory:", os.getcwd())
+st.write("📄 Files here:", os.listdir())
 
 # Load model & features
 model = joblib.load("churn_model.pkl")
@@ -49,3 +54,4 @@ if st.button("Predict Churn"):
         st.error(f"⚠️ Customer is likely to CHURN\nProbability: {probability:.2%}")
     else:
         st.success(f"✅ Customer is likely to STAY\nProbability: {probability:.2%}")
+
