@@ -2,45 +2,71 @@ import streamlit as st
 import pandas as pd
 import joblib
 import os
-import streamlit as st
 
-import joblib, os, streamlit as st
-
-st.write("CWD:", os.getcwd())
-st.write("FILES:", os.listdir())
-
-model_path = os.path.abspath("churn_model.pkl")
-st.write("MODEL PATH:", model_path)
-
-model = joblib.load(model_path)
-
-st.write("MODEL TYPE:", type(model))
-
-
-# Load model & features
-model = joblib.load("Telco_Churn_App/churn_model.pkl")
-features = joblib.load("Telco_Churn_App/features.pkl")
-
-
-st.set_page_config(page_title="Customer Churn Prediction", layout="centered")
-st.title("📊 Customer Churn Prediction")
-
-st.write("Enter customer details to predict churn")
-
-# ========== Inputs ==========
-tenure = st.number_input("Tenure (months)", 0, 100, 12)
-monthly_charges = st.number_input("Monthly Charges", 0.0, 200.0, 70.0)
-contract = st.selectbox("Contract Type", ["Month-to-month", "One year", "Two year"])
-internet = st.selectbox("Internet Service", ["DSL", "Fiber optic", "No"])
-tech_support = st.selectbox("Tech Support", ["Yes", "No"])
-online_security = st.selectbox("Online Security", ["Yes", "No"])
-payment_method = st.selectbox(
-    "Payment Method",
-    ["Electronic check", "Mailed check",
-     "Bank transfer (automatic)", "Credit card (automatic)"]
+# ================== Page Config (لازم في الأول) ==================
+st.set_page_config(
+    page_title="Customer Churn Prediction",
+    layout="centered"
 )
 
-# ========== Encoding ==========
+# ================== Paths ==================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(BASE_DIR, "churn_model.pkl")
+FEATURES_PATH = os.path.join(BASE_DIR, "features.pkl")
+
+# ================== Debug (احذفه بعد التأكد) ==================
+st.write("📂 Current Directory:", os.getcwd())
+st.write("📁 App Files:", os.listdir(BASE_DIR))
+st.write("📦 Model Path:", MODEL_PATH)
+
+# ================== Load Model & Features ==================
+model = joblib.load(MODEL_PATH)
+features = joblib.load(FEATURES_PATH)
+
+# ================== Optional check (وقت الديباج فقط) ==================
+st.write("Model type:", type(model))
+st.write("Model coefficients:", model.coef_)
+
+# ================== App UI ==================
+st.title("📊 Customer Churn Prediction")
+st.write("Enter customer details to predict churn")
+
+# ================== Inputs ==================
+tenure = st.number_input("Tenure (months)", 0, 100, 12)
+monthly_charges = st.number_input("Monthly Charges", 0.0, 200.0, 70.0)
+
+contract = st.selectbox(
+    "Contract Type",
+    ["Month-to-month", "One year", "Two year"]
+)
+
+internet = st.selectbox(
+    "Internet Service",
+    ["DSL", "Fiber optic", "No"]
+)
+
+tech_support = st.selectbox(
+    "Tech Support",
+    ["Yes", "No"]
+)
+
+online_security = st.selectbox(
+    "Online Security",
+    ["Yes", "No"]
+)
+
+payment_method = st.selectbox(
+    "Payment Method",
+    [
+        "Electronic check",
+        "Mailed check",
+        "Bank transfer (automatic)",
+        "Credit card (automatic)"
+    ]
+)
+
+# ================== Encoding ==================
 input_data = pd.DataFrame([{
     "tenure": tenure,
     "MonthlyCharges": monthly_charges,
@@ -53,24 +79,21 @@ input_data = pd.DataFrame([{
     "PaymentMethod_Electronic check": 1 if payment_method == "Electronic check" else 0
 }])
 
-# ترتيب الأعمدة زي التدريب
+# ترتيب الأعمدة مثل التدريب
 input_data = input_data.reindex(columns=features, fill_value=0)
 
-# ========== Prediction ==========
+# ================== Prediction ==================
 if st.button("Predict Churn"):
     prediction = model.predict(input_data)[0]
     probability = model.predict_proba(input_data)[0][1]
 
     if prediction == 1:
-        st.error(f"⚠️ Customer is likely to CHURN\nProbability: {probability:.2%}")
+        st.error(
+            f"⚠️ Customer is likely to CHURN\n\n"
+            f"Probability: {probability:.2%}"
+        )
     else:
-        st.success(f"✅ Customer is likely to STAY\nProbability: {probability:.2%}")
-
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-model = joblib.load(os.path.join(BASE_DIR, "churn_model.pkl"))
-features = joblib.load(os.path.join(BASE_DIR, "features.pkl"))
-st.write("Model coefficients:", model.coef_)
-
-
+        st.success(
+            f"✅ Customer is likely to STAY\n\n"
+            f"Probability: {probability:.2%}"
+        )
