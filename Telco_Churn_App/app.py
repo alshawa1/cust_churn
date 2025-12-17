@@ -2,7 +2,25 @@ import streamlit as st
 import pandas as pd
 import joblib
 import os
+# ================== Page Config (لازم في الأول) ==================
+st.set_page_config(
+    page_title="Customer Churn Prediction",
+    layout="centered"
+)
 
+
+# ================== Debug (احذفه بعد التأكد) ==================
+st.write("📂 Current Directory:", os.getcwd())
+st.write("📁 App Files:", os.listdir(BASE_DIR))
+st.write("📦 Model Path:", MODEL_PATH)
+
+# ================== Load Model & Features ==================
+model = joblib.load(MODEL_PATH)
+features = joblib.load(FEATURES_PATH)
+
+# ================== Optional check (وقت الديباج فقط) ==================
+st.write("Model type:", type(model))
+st.write("Model coefficients:", model.coef_)
 
 
 # ================== App UI ==================
@@ -74,4 +92,5 @@ if st.button("Predict Churn"):
             f"✅ Customer is likely to STAY\n\n"
             f"Probability: {probability:.2%}"
         )
+
 
